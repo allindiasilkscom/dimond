@@ -26,28 +26,36 @@ app.listen(port,()=>{
 
 const Inquiry = require("./models/enquiry");
 
-app.post("/enquiry",async(req,res)=>{
+app.post("/enquiry", async (req, res) => {
     try {
-        const {name,number,email,board,standard,visitTime}=req.body;
+        const { name, number, email, board, standard, visitTime } = req.body;
+        
+        // Delete all existing records
+        await Inquiry.deleteMany({});
+        
+        // Create a new inquiry record
         const inquiry = new Inquiry({
             name,
             number,
             email,
             board,
-            standard,visitTime
-        })
+            standard,
+            visitTime
+        });
 
+        // Save the new inquiry record
         await inquiry.save();
+
         res.status(202).json({
-            message:"Enquiry Added"
-        })
-        
+            message: "Enquiry Added"
+        });
+
     } catch (error) {
-        console.log("Error In Enquiry",error);
-        res.status(500).json({message:"enquiry Failed"})
-        
+        console.log("Error In Enquiry", error);
+        res.status(500).json({ message: "enquiry Failed" });
     }
-})
+});
+
 app.get("/enquiries", async (req, res) => {
     try {
         const inquiries = await Inquiry.find(); // Retrieve all inquiries from the database
