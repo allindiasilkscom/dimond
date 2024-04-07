@@ -25,6 +25,7 @@ app.listen(port,()=>{
 })
 
 const Inquiry = require("./models/enquiry");
+const addmission = require("./models/addmission");
 
 app.post("/enquiry",async(req,res)=>{
     try {
@@ -55,5 +56,64 @@ app.get("/enquiries", async (req, res) => {
     } catch (error) {
         console.log("Error retrieving inquiries", error);
         res.status(500).json({ message: "Failed to retrieve inquiries" });
+    }
+});
+
+app.post("/addmission", async (req, res) => {
+    try {
+        const { firstName, middleName, lastName, dob, gender, course, address, email, phoneNo, subject, fee } = req.body;
+
+        
+        const newAdmission = new addmission({
+            firstName,
+            middleName,
+            lastName,
+            dob: new Date(dob), 
+            gender,
+            course,
+            address,
+            email,
+            phoneNo,
+            subject,
+            fee
+        });
+
+       
+        await newAdmission.save();
+
+        res.status(201).json({
+            message: "Admission Added",
+            admission: newAdmission 
+        });
+    } catch (error) {
+       
+        res.status(500).json({ message: "Failed to add admission" });
+    }
+});
+app.get("/admissions", async (req, res) => {
+    try {
+        const admissions = await Admission.find(); // Retrieve all admissions from the database
+        res.status(200).json(admissions); // Respond with the list of admissions as JSON
+    } catch (error) {
+        console.error("Error in retrieving admissions:", error);
+        res.status(500).json({ message: "Failed to retrieve admissions" });
+    }
+});
+
+// GET admission by ID
+app.get("/admissions/:id", async (req, res) => {
+    const admissionId = req.params.id;
+
+    try {
+        const admission = await Admission.findById(admissionId); // Find admission by ID in the database
+
+        if (!admission) {
+            return res.status(404).json({ message: "Admission not found" });
+        }
+
+        res.status(200).json(admission); // Respond with the admission details as JSON
+    } catch (error) {
+        console.error("Error in retrieving admission:", error);
+        res.status(500).json({ message: "Failed to retrieve admission" });
     }
 });
