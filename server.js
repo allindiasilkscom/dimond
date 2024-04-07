@@ -64,12 +64,11 @@ app.post("/addmission", async (req, res) => {
     try {
         const { firstName, middleName, lastName, dob, gender, course, address, email, phoneNo, subject, fee } = req.body;
 
-        
         const newAdmission = new addmission({
             firstName,
             middleName,
             lastName,
-            dob: new Date(dob), 
+            dob: new Date(dob),
             gender,
             course,
             address,
@@ -79,16 +78,18 @@ app.post("/addmission", async (req, res) => {
             fee
         });
 
-       
+        // Save the new admission record to the database
         await newAdmission.save();
 
         res.status(201).json({
             message: "Admission Added",
-            admission: newAdmission 
+            admission: newAdmission
         });
     } catch (error) {
-       
-        res.status(500).json({ message: "Failed to add admission" });
+        console.error("Error in adding admission:", error);
+
+        // Return detailed error response with error message
+        res.status(500).json({ message: "Failed to add admission", error: error.message });
     }
 });
 app.get("/admissions", async (req, res) => {
@@ -101,7 +102,7 @@ app.get("/admissions", async (req, res) => {
     }
 });
 
-// GET admission by ID
+
 app.get("/admissions/:id", async (req, res) => {
     const admissionId = req.params.id;
 
