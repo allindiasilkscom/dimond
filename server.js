@@ -49,6 +49,7 @@ app.post("/enquiry",async(req,res)=>{
         
     }
 })
+
 app.get("/enquiries", async (req, res) => {
     try {
         const inquiries = await Inquiry.find(); // Retrieve all inquiries from the database
