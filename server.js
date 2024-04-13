@@ -94,7 +94,7 @@ app.post("/addmission", async (req, res) => {
 });
 app.get("/admissions", async (req, res) => {
     try {
-        const admissions = await Admission.find(); // Retrieve all admissions from the database
+        const admissions = await addmission.find(); // Retrieve all admissions from the database
         res.status(200).json(admissions); // Respond with the list of admissions as JSON
     } catch (error) {
         console.error("Error in retrieving admissions:", error);
@@ -107,7 +107,7 @@ app.get("/admissions/:id", async (req, res) => {
     const admissionId = req.params.id;
 
     try {
-        const admission = await Admission.findById(admissionId); // Find admission by ID in the database
+        const admission = await addmission.findById(admissionId); // Find admission by ID in the database
 
         if (!admission) {
             return res.status(404).json({ message: "Admission not found" });
